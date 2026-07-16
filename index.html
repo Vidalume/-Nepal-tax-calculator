@@ -3,49 +3,392 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Articles | Nepal Income Tax Calculator</title>
-<meta name="description" content="Guides on Nepal income tax: slabs, deductions, SSF vs EPF, filing tips, and more.">
+<title>Nepal Income Tax Calculator FY 2082/83 (2025/26)</title>
+<meta name="description" content="Free Nepal income tax / TDS calculator for FY 2082/83 (2025-26). Progressive slabs, SSF/insurance deductions, female rebate, monthly TDS.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css">
+<style>
+  :root{
+    --paper:#EFEAE0;
+    --paper-card:#F7F3E9;
+    --ink:#23252B;
+    --ink-soft:#5b584e;
+    --rule:#CBC2A8;
+    --rule-strong:#B3A67C;
+    --crimson:#A6362B;
+    --crimson-dark:#7C271F;
+    --gold:#9C7A2E;
+    --forest:#33513A;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px);
+    background-size: 100% 34px;
+    color:var(--ink);
+    font-family:'Public Sans', sans-serif;
+    line-height:1.5;
+    padding: 40px 20px 80px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;}
+  header{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 14px; margin-bottom: 28px;
+    background: var(--paper);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--crimson); margin:0 0 6px;
+  }
+  h1{
+    font-family:'Fraunces', serif; font-weight:600; font-size:34px;
+    margin:0; letter-spacing:-0.01em;
+  }
+  header .fy{
+    font-family:'IBM Plex Mono', monospace; font-size:13px; text-align:right;
+    color:var(--ink-soft); background:var(--paper);
+  }
+  .layout{
+    display:grid; grid-template-columns: 1.15fr 1fr; gap: 32px;
+    align-items:start;
+  }
+  @media (max-width: 860px){ .layout{ grid-template-columns: 1fr; } }
+
+  .ledger{
+    background:var(--paper-card);
+    border:1px solid var(--rule-strong);
+    padding: 24px 26px 28px;
+  }
+  .ledger h2{
+    font-family:'Fraunces', serif; font-size:17px; font-weight:600;
+    margin:0 0 4px; display:flex; align-items:center; gap:10px;
+  }
+  .ledger h2 .num{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--crimson);
+    border:1px solid var(--crimson); width:20px; height:20px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .ledger .sub{ font-size:12.5px; color:var(--ink-soft); margin:0 0 18px 30px;}
+
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block; font-size:12.5px; font-weight:600; color:var(--ink);
+    margin-bottom:5px;
+  }
+  .field .hint{ font-size:11.5px; color:var(--ink-soft); margin-top:4px; }
+  .field input[type=number], .field select{
+    width:100%; font-family:'IBM Plex Mono', monospace; font-size:15px;
+    padding:9px 10px; border:1px solid var(--rule-strong);
+    background:#FFFDF7; color:var(--ink);
+  }
+  .field input[type=number]:focus, .field select:focus{
+    outline:2px solid var(--crimson); outline-offset:1px;
+  }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .checks{ display:flex; flex-direction:column; gap:10px; margin-top:4px; }
+  .check{ display:flex; align-items:flex-start; gap:8px; font-size:12.5px; }
+  .check input{ margin-top:3px; }
+  .divider{ border:none; border-top:1px dashed var(--rule-strong); margin:20px 0; }
+
+  button.calc{
+    width:100%; margin-top:6px; padding:13px; font-family:'IBM Plex Mono', monospace;
+    font-size:14px; font-weight:600; letter-spacing:.04em; text-transform:uppercase;
+    background:var(--crimson); color:#F7F3E9; border:none; cursor:pointer;
+  }
+  button.calc:hover{ background:var(--crimson-dark); }
+
+  .result-col{ position:relative; }
+  .voucher{
+    background:var(--paper-card); border:1px solid var(--rule-strong);
+    padding:26px 26px 22px; min-height: 200px; position:relative; overflow:hidden;
+  }
+  .voucher h2{
+    font-family:'Fraunces', serif; font-size:17px; font-weight:600; margin:0 0 18px;
+  }
+  .line{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:7px 0; border-bottom:1px dotted var(--rule-strong);
+    font-size:13.5px;
+  }
+  .line .lbl{ color:var(--ink-soft); }
+  .line .val{ font-family:'IBM Plex Mono', monospace; font-weight:500; }
+  .line.total{
+    border-bottom:none; border-top:2px solid var(--ink); margin-top:6px; padding-top:12px;
+  }
+  .line.total .lbl{ color:var(--ink); font-weight:600; font-size:14.5px; }
+  .line.total .val{ font-size:19px; font-weight:600; color:var(--crimson-dark); }
+
+  .words{
+    font-family:'Fraunces', serif; font-style:italic; font-size:13px;
+    color:var(--ink-soft); margin-top:14px; border-top:1px dashed var(--rule-strong);
+    padding-top:12px;
+  }
+
+  .slabtable{ width:100%; border-collapse:collapse; margin-top:18px; font-size:12px; }
+  .slabtable th{
+    text-align:left; font-family:'IBM Plex Mono', monospace; font-weight:500;
+    color:var(--ink-soft); border-bottom:1px solid var(--ink); padding:5px 4px;
+    text-transform:uppercase; letter-spacing:.03em; font-size:10.5px;
+  }
+  .slabtable td{
+    padding:6px 4px; border-bottom:1px dotted var(--rule);
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .slabtable td:last-child, .slabtable th:last-child{ text-align:right; }
+
+  .stamp-zone{
+    position:absolute; top:20px; right:20px; width:112px; height:112px;
+    opacity:0; transform:scale(1.5) rotate(-14deg);
+    transition: opacity .35s ease, transform .45s cubic-bezier(.2,1.4,.4,1);
+    pointer-events:none;
+  }
+  .stamp-zone.show{ opacity:1; transform:scale(1) rotate(-9deg); }
+  .stamp-zone svg{ width:100%; height:100%; }
+
+  .note{
+    font-size:11.5px; color:var(--ink-soft); margin-top:18px; line-height:1.6;
+    border-top:1px solid var(--rule-strong); padding-top:12px;
+  }
+  footer{
+    margin-top:34px; text-align:center; font-size:11.5px; color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+  }
+</style>
 </head>
 <body>
 <div class="wrap">
-  <header class="site">
+
+  <header>
     <div>
-      <p class="eyebrow">Guides</p>
-      <h1>Articles</h1>
+      <p class="eyebrow">आयकर &middot; Inland Revenue, Nepal</p>
+      <h1>Income Tax Calculator</h1>
     </div>
-    <nav class="sitenav">
-      <a href="../index.html">Calculator</a>
-      <a href="../about.html">About</a>
-      <a href="../contact.html">Contact</a>
-    </nav>
+    <div style="text-align:right;">
+      <div class="fy">FY 2082/83<br>(2025&ndash;26 AD)</div>
+      <nav style="font-family:'IBM Plex Mono', monospace; font-size:12px; margin-top:8px;">
+        <a href="articles/index.html" style="color:var(--ink-soft); text-decoration:none; margin-left:14px;">Articles</a>
+        <a href="about.html" style="color:var(--ink-soft); text-decoration:none; margin-left:14px;">About</a>
+        <a href="contact.html" style="color:var(--ink-soft); text-decoration:none; margin-left:14px;">Contact</a>
+      </nav>
+    </div>
   </header>
 
-  <p>Plain-language guides on Nepal's income tax system — slabs, deductions, and the details that trip people up when they file. New guides are added regularly.</p>
+  <div class="layout">
 
-  <ul class="article-list">
-    <li>
-      <a href="tax-slabs-fy-2082-83.html">Nepal Income Tax Slabs for FY 2082/83, Explained</a>
-      <div class="desc">A full breakdown of the current progressive slabs for single filers and couples, with worked examples.</div>
-    </li>
-    <li>
-      <a href="ssf-vs-epf-vs-cit.html">SSF vs EPF vs CIT: Which Retirement Deduction Should You Claim?</a>
-      <div class="desc">How Nepal's three main retirement schemes differ, and how each affects your taxable income.</div>
-    </li>
-    <li>
-      <a href="female-tax-rebate-nepal.html">The 10% Female Tax Rebate in Nepal: Who Qualifies and How It Works</a>
-      <div class="desc">Eligibility rules and a worked example of how the rebate is applied to tax payable.</div>
-    </li>
-  </ul>
+    <div class="ledger">
+      <h2><span class="num">1</span> Your income</h2>
+      <p class="sub">Enter figures for the full fiscal year (Shrawan&ndash;Ashadh).</p>
 
-  <p style="margin-top:28px; color:var(--ink-soft); font-size:13.5px;">More guides on remote area allowance, insurance deductions, TDS on salary, and filing deadlines are coming soon.</p>
+      <div class="field">
+        <label for="gross">Annual gross income (NPR)</label>
+        <input type="number" id="gross" min="0" step="1000" placeholder="1200000">
+        <div class="hint">Salary, allowances and any other taxable income before deductions.</div>
+      </div>
 
-  <footer class="site">
-    <span>&copy; 2026 Nepal Income Tax Calculator</span>
-    <span><a href="../privacy.html">Privacy Policy</a> &middot; <a href="../about.html">About</a></span>
-  </footer>
+      <div class="field">
+        <label for="status">Filing status</label>
+        <select id="status">
+          <option value="single">Single</option>
+          <option value="couple">Couple (joint)</option>
+        </select>
+      </div>
+
+      <hr class="divider">
+      <h2><span class="num">2</span> Deductions</h2>
+      <p class="sub">Leave at 0 if not applicable &mdash; each is capped automatically.</p>
+
+      <div class="row2">
+        <div class="field">
+          <label for="retire">Retirement contribution<br>(SSF / EPF / CIT)</label>
+          <input type="number" id="retire" min="0" step="1000" value="0">
+        </div>
+        <div class="field">
+          <label for="life">Life insurance premium</label>
+          <input type="number" id="life" min="0" step="500" value="0">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="health">Health insurance premium</label>
+          <input type="number" id="health" min="0" step="500" value="0">
+        </div>
+        <div class="field">
+          <label for="remote">Remote area allowance</label>
+          <input type="number" id="remote" min="0" step="1000" value="0">
+        </div>
+      </div>
+
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="ssfExempt"> Exempt from the 1% Social Security Tax (SSF contributor, pensioner, or registered sole proprietor)</label>
+        <label class="check"><input type="checkbox" id="femaleRebate"> Female taxpayer with remuneration as sole income (10% rebate on tax payable)</label>
+      </div>
+
+      <button class="calc" id="calcBtn">Calculate tax</button>
+    </div>
+
+    <div class="result-col">
+      <div class="voucher" id="voucher">
+        <h2>Tax voucher</h2>
+
+        <div class="line"><span class="lbl">Gross annual income</span><span class="val" id="rGross">NPR 0</span></div>
+        <div class="line"><span class="lbl">Total deductions</span><span class="val" id="rDeduct">NPR 0</span></div>
+        <div class="line"><span class="lbl">Taxable income</span><span class="val" id="rTaxable">NPR 0</span></div>
+        <div class="line"><span class="lbl">Effective rate</span><span class="val" id="rEff">0%</span></div>
+        <div class="line"><span class="lbl">Monthly TDS</span><span class="val" id="rMonthly">NPR 0</span></div>
+        <div class="line total"><span class="lbl">Annual tax payable</span><span class="val" id="rTotal">NPR 0</span></div>
+
+        <p class="words" id="rWords">Amount in words appears once calculated.</p>
+
+        <table class="slabtable">
+          <thead><tr><th>Slab</th><th>Rate</th><th>Tax</th></tr></thead>
+          <tbody id="slabBody"></tbody>
+        </table>
+
+        <div class="stamp-zone" id="stampZone">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#A6362B" stroke-width="3" stroke-dasharray="4 3"/>
+            <circle cx="60" cy="60" r="43" fill="none" stroke="#A6362B" stroke-width="1.5"/>
+            <text x="60" y="42" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#A6362B" font-weight="600" letter-spacing="1">CALCULATED</text>
+            <text x="60" y="68" text-anchor="middle" font-family="Fraunces, serif" font-size="17" fill="#A6362B" font-weight="600">कर</text>
+            <text x="60" y="88" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" fill="#A6362B" letter-spacing="1">FY 2082/83</text>
+          </svg>
+        </div>
+      </div>
+
+      <p class="note">Based on the Finance Act 2082 slabs for resident natural persons (FY 2082/83, mid-July 2025&ndash;mid-July 2026). Edge cases &mdash; disability credit, medical tax credit, non-resident status, business/presumptive tax &mdash; are not modelled. This is a planning estimate, not a filing document; confirm with a chartered accountant or ird.gov.np before filing.</p>
+    </div>
+
+  </div>
+
+  <footer>Nepal Income Tax Calculator &middot; FY 2082/83</footer>
 </div>
+
+<script>
+function slabsFor(status){
+  if(status === 'couple'){
+    return [
+      [0, 600000, 0.01],
+      [600000, 800000, 0.10],
+      [800000, 1100000, 0.20],
+      [1100000, 2000000, 0.30],
+      [2000000, 5000000, 0.36],
+      [5000000, Infinity, 0.39]
+    ];
+  }
+  return [
+    [0, 500000, 0.01],
+    [500000, 700000, 0.10],
+    [700000, 1000000, 0.20],
+    [1000000, 2000000, 0.30],
+    [2000000, 5000000, 0.36],
+    [5000000, Infinity, 0.39]
+  ];
+}
+
+function fmt(n){
+  n = Math.round(n);
+  return 'NPR ' + n.toLocaleString('en-IN');
+}
+
+function numberToWordsNPR(n){
+  n = Math.round(n);
+  if(n === 0) return 'Zero rupees only.';
+  const ones = ['','one','two','three','four','five','six','seven','eight','nine','ten',
+    'eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+  const tens = ['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+  function twoDigit(x){
+    if(x < 20) return ones[x];
+    return tens[Math.floor(x/10)] + (x%10 ? '-' + ones[x%10] : '');
+  }
+  function threeDigit(x){
+    let s = '';
+    if(x >= 100){ s += ones[Math.floor(x/100)] + ' hundred'; x = x % 100; if(x) s += ' '; }
+    if(x) s += twoDigit(x);
+    return s;
+  }
+  let crore = Math.floor(n / 10000000); n %= 10000000;
+  let lakh = Math.floor(n / 100000); n %= 100000;
+  let thousand = Math.floor(n / 1000); n %= 1000;
+  let rest = n;
+  let parts = [];
+  if(crore) parts.push(threeDigit(crore) + ' crore');
+  if(lakh) parts.push(threeDigit(lakh) + ' lakh');
+  if(thousand) parts.push(threeDigit(thousand) + ' thousand');
+  if(rest) parts.push(threeDigit(rest));
+  let words = parts.join(' ');
+  words = words.charAt(0).toUpperCase() + words.slice(1);
+  return words + ' rupees only.';
+}
+
+document.getElementById('calcBtn').addEventListener('click', function(){
+  const gross = parseFloat(document.getElementById('gross').value) || 0;
+  const status = document.getElementById('status').value;
+  const retireRaw = parseFloat(document.getElementById('retire').value) || 0;
+  const lifeRaw = parseFloat(document.getElementById('life').value) || 0;
+  const healthRaw = parseFloat(document.getElementById('health').value) || 0;
+  const remoteRaw = parseFloat(document.getElementById('remote').value) || 0;
+  const ssfExempt = document.getElementById('ssfExempt').checked;
+  const femaleRebate = document.getElementById('femaleRebate').checked;
+
+  const retire = Math.min(retireRaw, 500000, gross/3);
+  const life = Math.min(lifeRaw, 40000);
+  const health = Math.min(healthRaw, 20000);
+  const remote = Math.min(remoteRaw, 50000);
+  const totalDeduct = retire + life + health + remote;
+
+  const taxable = Math.max(gross - totalDeduct, 0);
+
+  const slabs = slabsFor(status);
+  let tax = 0;
+  let remaining = taxable;
+  let breakdown = [];
+
+  for(const [from, to, rate] of slabs){
+    if(remaining <= 0) break;
+    const bandSize = (to === Infinity) ? remaining : Math.min(to - from, remaining);
+    if(bandSize <= 0) continue;
+    let bandTax = bandSize * rate;
+    if(ssfExempt && rate === 0.01) bandTax = 0;
+    tax += bandTax;
+    breakdown.push({from, to, rate, bandSize, bandTax});
+    remaining -= bandSize;
+  }
+
+  if(femaleRebate) tax = tax * 0.9;
+
+  const effRate = gross > 0 ? (tax / gross * 100) : 0;
+  const monthly = tax / 12;
+
+  document.getElementById('rGross').textContent = fmt(gross);
+  document.getElementById('rDeduct').textContent = fmt(totalDeduct);
+  document.getElementById('rTaxable').textContent = fmt(taxable);
+  document.getElementById('rEff').textContent = effRate.toFixed(1) + '%';
+  document.getElementById('rMonthly').textContent = fmt(monthly);
+  document.getElementById('rTotal').textContent = fmt(tax);
+  document.getElementById('rWords').textContent = numberToWordsNPR(tax);
+
+  const body = document.getElementById('slabBody');
+  body.innerHTML = '';
+  breakdown.forEach(b=>{
+    const tr = document.createElement('tr');
+    const rateLabel = (ssfExempt && b.rate === 0.01) ? '0% (exempt)' : (b.rate*100) + '%';
+    const toLabel = b.to === Infinity ? 'above' : fmt(b.to);
+    tr.innerHTML = '<td>' + fmt(b.from) + ' &ndash; ' + toLabel + '</td>' +
+                   '<td>' + rateLabel + '</td>' +
+                   '<td>' + fmt(b.bandTax) + '</td>';
+    body.appendChild(tr);
+  });
+
+  const stamp = document.getElementById('stampZone');
+  stamp.classList.remove('show');
+  void stamp.offsetWidth;
+  stamp.classList.add('show');
+});
+</script>
 </body>
 </html>
